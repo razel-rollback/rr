@@ -1,32 +1,52 @@
-  import { Github, Youtube, ArrowRight } from "lucide-react";
+  import { Github, Youtube, ArrowRight, EyeOff, ExternalLink, ChevronDown } from "lucide-react";
   import { Button } from "./ui/button";
   import { Link } from "react-router-dom";
+  import { useState } from "react";
   import premiere from "@/assets/priemere.png";
   import spg from "@/assets/poultry.png";
   import rr from "@/assets/rr.png";
+  import farm from "@/assets/farm.png";
 
   const ProjectsSection = () => {
+    const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set());
+
+    const toggleDescription = (title: string) => {
+      const newExpanded = new Set(expandedDescriptions);
+      if (newExpanded.has(title)) {
+        newExpanded.delete(title);
+      } else {
+        newExpanded.add(title);
+      }
+      setExpandedDescriptions(newExpanded);
+    };
+
     const projects = [
       {
         title: "Premiere: SHS Student Registration System",
-        description: "Developed a comprehensive Laravel-based platform that automates student enrollment, section assignment, and payment tracking with secure role-based access. Integrated dynamic scheduling, CRUD management for academic components, and automated report generation to streamline administrative workflows. Ensured data integrity and security through authentication, validation, and relational database design.",
+        description: "Comprehensive Laravel-based platform that automates student enrollment, section assignment, and payment tracking with secure role-based access. Features dynamic scheduling, CRUD management for academic components, and automated report generation.",
         image: premiere,
         github: "https://github.com/razel-rollback/Premiere",
-        youtube: "https://youtube.com",
+        youtube: "null",
+        tags: ["Laravel", "MySQL", "PHP", "Bootstrap", "JavaScript"],
+        liveDemo: "#",
       },
       {
         title: "Smart Poultry Guardian",
-        description: "Designed and implemented an IoT solution for poultry farm automation using Arduino sensors (DHT22, LDR) and actuators (servo, fan) controlled via a custom Python-to-Arduino serial bridge. Developed a Laravel web dashboard for real-time environmental monitoring, manual device control, and programmable feeding/lighting schedules to optimize chicken health and farm efficiency. Integrated a three-tier architecture (hardware, gateway, and cloud) to enable remote management and reduce manual labor in small-scale farming.",
+        description: "IoT solution for poultry farm automation using Arduino sensors (DHT22, LDR) and actuators controlled via Python-to-Arduino serial bridge. Laravel web dashboard for real-time monitoring, device control, and programmable schedules.",
         image: spg,
         github: "https://github.com/razel-rollback/smart_poultry_guardian",
-        youtube: "https://youtube.com",
+        youtube: "null",
+        tags: ["Arduino", "Python", "Laravel", "IoT", "MySQL"],
+        liveDemo: "#",
       },
       {
         title: "Portfolio Website",
-        description: "A sleek, responsive portfolio website featuring a dark mode interface and smooth animations. The site showcases technical projects, skills,  and contact functionality while maintaining clean, maintainable code architecture. Designed with modern UI/UX principles using shadcn/ui components for optimal user experience and professional presentation.",
+        description: "Sleek, responsive portfolio website with dark mode interface and smooth animations. Built with modern UI/UX principles using shadcn/ui components for optimal user experience.",
         image: rr,
         github: "https://github.com/razel-rollback/razel-rollback.com",
-        youtube: "https://youtube.com",
+        youtube: "null",
+        tags: ["React", "TypeScript", "Tailwind", "Vite", "Shadcn/UI"],
+        liveDemo: "https://razel-rollback.github.io/rr/",
       },
     ];
 
@@ -47,41 +67,105 @@
                 className="group bg-card rounded-xl overflow-hidden border border-border card-shadow hover:border-primary/50 transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${index * 0.15}s` }}
               >
-                <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-                  <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
+                <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
+                    {typeof project.image === 'string' && project.image.includes('/') ? (
                       <img
                         src={project.image}
                         alt={project.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
-                    </div>
-                </div>
+                    ) : (
+                      <span className="text-6xl group-hover:scale-110 transition-transform duration-300">
+                        {project.image}
+                      </span>
+                    )}
+                  </div>
                 <div className="p-6 space-y-4">
                   <h3 className="font-mono text-lg font-semibold text-foreground">
                     {project.title}
                   </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {project.description}
-                  </p>
-                  <div className="flex items-center gap-3 pt-2">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Github className="h-4 w-4" />
-                      GitHub
-                    </a>
-                    <a
-                      href={project.youtube}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-red-500 transition-colors"
-                    >
-                      <Youtube className="h-4 w-4" />
-                      Demo
-                    </a>
+                  <div>
+                    <p className={`text-muted-foreground text-sm ${expandedDescriptions.has(project.title) ? '' : 'line-clamp-3'}`}>
+                      {project.description}
+                    </p>
+                    {project.description.length > 150 && (
+                      <button
+                        onClick={() => toggleDescription(project.title)}
+                        className="text-primary text-xs font-mono hover:text-primary/80 transition-colors mt-2 flex items-center gap-1"
+                      >
+                        {expandedDescriptions.has(project.title) ? (
+                          <>
+                            Show Less
+                            <ChevronDown className="h-3 w-3 rotate-180" />
+                          </>
+                        ) : (
+                          <>
+                            Show More
+                            <ChevronDown className="h-3 w-3" />
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-1 text-xs font-mono bg-primary/10 text-primary rounded"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-4 pt-2">
+                    {/* GitHub Button - Conditional Rendering */}
+                    {project.github === "null" ? (
+                      <span className="flex items-center gap-2 text-sm text-muted-foreground/50 cursor-not-allowed">
+                        <EyeOff className="h-4 w-4" />
+                        Not Available
+                      </span>
+                    ) : (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <Github className="h-4 w-4" />
+                        Code
+                      </a>
+                    )}
+
+                    {/* YouTube Button - Conditional Rendering */}
+                    {project.youtube === "null" ? (
+                      <span className="flex items-center gap-2 text-sm text-muted-foreground/50 cursor-not-allowed">
+                        <EyeOff className="h-4 w-4" />
+                        Not Available
+                      </span>
+                    ) : (
+                      <a
+                        href={project.youtube}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-red-500 transition-colors"
+                      >
+                        <Youtube className="h-4 w-4" />
+                        Demo
+                      </a>
+                    )}
+
+                    {/* Live Demo Button - Conditional Rendering */}
+                    {project.liveDemo !== "#" && (
+                      <a
+                        href={project.liveDemo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-green-500 transition-colors"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Live
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
