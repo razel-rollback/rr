@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
-import { useLocation } from "react-router-dom"; // Add this
+import { Link } from "react-router-dom"; // Import Link
 
 const HeroSection = () => {
   const [displayText, setDisplayText] = useState("");
   const fullText = "I'm razel-rollback";
-  const location = useLocation(); // Get location
 
   useEffect(() => {
     let index = 0;
@@ -21,18 +20,13 @@ const HeroSection = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Function to handle scrolling
-  const handleScrollTo = (hash: string) => {
-    if (location.pathname !== "/") {
-      // Navigate to home with hash
-      window.location.href = `/#${hash}`;
-    } else {
-      const element = document.getElementById(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  };
+  // Simple scroll function for HashRouter
+  const scrollToSection = (hash: string) => {
+  const element = document.getElementById(hash);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth" });
+  }
+};
 
   return (
     <section
@@ -50,17 +44,17 @@ const HeroSection = () => {
           Full-stack developer passionate about building beautiful, functional web applications
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-          <Button variant="hero" size="lg" onClick={() => handleScrollTo("contact")}>
+          <Button variant="hero" size="lg" onClick={() => scrollToSection("contact")}>
             Contact Me
           </Button>
-          <Button variant="heroOutline" size="lg" onClick={() => handleScrollTo("projects")}>
+          <Button variant="heroOutline" size="lg" onClick={() => scrollToSection("projects")}>
             View Projects
           </Button>
         </div>
       </div>
 
       <button
-        onClick={() => handleScrollTo("about")}
+        onClick={() => scrollToSection("about")}
         className="absolute bottom-8 animate-bounce text-muted-foreground hover:text-primary transition-colors"
       >
         <ChevronDown className="h-8 w-8" />

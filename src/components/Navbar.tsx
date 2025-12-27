@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
-import { Link, useLocation } from "react-router-dom"; // Add useLocation
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isDark, setIsDark] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const location = useLocation(); // Get current location
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.classList.add("dark");
@@ -24,13 +25,21 @@ const Navbar = () => {
     document.documentElement.classList.toggle("dark");
   };
 
-  // Function to handle hash link scrolling
-  const scrollToSection = (hash: string) => {
+  // Function to handle navigation - handles both routes and section scrolling
+  const handleNavClick = (hash: string) => {
+    setIsMobileOpen(false); // Close mobile menu
+
     if (location.pathname !== "/") {
-      // If not on home page, navigate to home with hash
-      window.location.href = `/#${hash}`;
+      // Navigate to home first, then scroll to section
+      navigate("/");
+      setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
     } else {
-      // If on home page, scroll to section
+      // Already on home page, just scroll
       const element = document.getElementById(hash);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
@@ -40,7 +49,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", hash: "home" },
-    { name: "Skills", hash: "skills" },
+    { name:  "Skills", hash: "skills" },
     { name: "Projects", hash: "projects" },
     { name: "Contact Me", hash: "contact" },
   ];
@@ -55,19 +64,19 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link
-            to="/"
+          <button
+            onClick={() => handleNavClick("home")}
             className="font-mono text-xl font-bold text-foreground hover:text-primary transition-colors"
           >
             razel-rollback<span className="text-primary">_</span>
-          </Link>
+          </button>
 
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <button
                 key={link.name}
-                onClick={() => scrollToSection(link.hash)}
+                onClick={() => handleNavClick(link.hash)}
                 className="nav-link font-mono text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.name}
@@ -99,13 +108,10 @@ const Navbar = () => {
             {navLinks.map((link) => (
               <button
                 key={link.name}
-                onClick={() => {
-                  scrollToSection(link.hash);
-                  setIsMobileOpen(false);
-                }}
-                className="block py-2 font-mono text-sm text-muted-foreground hover:text-foreground"
+                onClick={() => handleNavClick(link. hash)}
+                className="block py-2 font-mono text-sm text-muted-foreground hover:text-foreground w-full text-left"
               >
-                {link.name}
+                {link. name}
               </button>
             ))}
           </div>

@@ -13,9 +13,17 @@ const Footer = () => {
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
-            <a href="#home" className="font-mono text-xl font-bold text-foreground">
-              razel-rollback<span className="text-primary">_</span>
-            </a>
+            <button
+                onClick={() => {
+                  const element = document.getElementById("home");
+                  if (element) {
+                    element.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="font-mono text-xl font-bold text-foreground"
+              >
+                razel-rollback<span className="text-primary">_</span>
+              </button>
             <p className="text-muted-foreground text-sm mt-2">
               Building digital experiences
             </p>

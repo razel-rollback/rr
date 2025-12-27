@@ -175,9 +175,9 @@
           <div className="text-center mt-12">
             <Button variant="heroOutline" size="lg" asChild>
               <Link to="/projects" className="inline-flex items-center gap-2">
-              View More Projects
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+                View More Projects
+                <ArrowRight className="h-4 w-4" />
+              </Link>
           </Button>
           </div>
         </div>
